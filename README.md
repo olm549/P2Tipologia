@@ -12,30 +12,48 @@ Age : Edad del paciente.
 
 Sex : Sexo del paciente.
 
-exang: Si el paciente ha sufrido una angina provocada por el ejercicio (1 = Si, 0 = No)
-
-ca: Número de vasos principales del corazón (De 0 a 3).
-
 cp : Tipo de dolor en el pecho 
 
  1. Angina típica.
  2. Angina atípica
  3. Dolor no-anginal.
  4. Asintomático.
- 
+
 trtbps : Presión arterial en reposo (en mm Hg)
 
 chol : Colesterol (en mg/dl) 
 
 fbs : (Glucemia > 120 mg/dl) (1 = True; 0 = False)
 
-rest_ecg : Resultados de electrocardiografía en reposo.
+restecg : Resultados de electrocardiografía en reposo.
 
   0. Normal
   1. Anomalías de onda ST-T (Inversiones de onda T y/o una elevación de la onda ST > 0.05 mV)
   2. Muestra una probable hipertrófia del ventrículo izquierdo por el criterio Estes.
 
 thalach : Ritmo cardiaco máximo.
+
+exang: Si el paciente ha sufrido una angina provocada por el ejercicio (1 = Si, 0 = No)
+
+oldpeak: Depresión del segmento ST provocada por el ejercicio en relación con el reposo.
+
+slp: Pendiente del segmento ST en la electrocardiografía.
+
+1. Pendiente ascendente.
+2. Plano.
+3. Pendiente descendente.
+
+
+caa: Número de vasos principales del corazón (De 0 a 3).
+
+thal: Prueba de esfuerzo cardiaco (Thalium stress test).
+
+1. El test muestra un defecto irreversible.
+2. El flujo sanguineo se encuentra dentro de los valores normales.
+3. El test muestra un defecto reversible.
+
+
+
 
 target : Variable de clase. 0 equivale a un menor riesgo de ataque cardiaco mientras que 1 equivale un mayor riesgo.
 
