@@ -2,7 +2,9 @@
 
 Este repositorio es parte de la Práctica 2 de la asignatura Tipología y Ciclo de Vida de los Datos del master de Ciencia de Datos. En el, haremos uso del Dataset *Heart Attack Analysis & Prediction Dataset* de Kaggle[Kaggle.com] con el fin de analizar los casos en los que es más probable que una persona sufra un ataque al corazón, así como los factores más influyentes a la hora de que estos casos se den.
 
-Los miembros del grupo son:
+# Miembros del grupo
+
+El grupo está formado por:
 
  1. Óscar López Montero
  2. José Manuel Jara
