@@ -18,10 +18,10 @@ ca: Número de vasos principales del corazón (De 0 a 3).
 
 cp : Tipo de dolor en el pecho 
 
- 1: Angina típica.
- 2: Angina atípica.
- 3: Dolor no-anginal.
- 4: Asintomático.
+ 1. Angina típica.
+ 2. Angina atípica
+ 3. Dolor no-anginal.
+ 4. Asintomático.
  
 trtbps : Presión arterial en reposo (en mm Hg)
 
@@ -30,9 +30,10 @@ chol : Colesterol (en mg/dl)
 fbs : (Glucemia > 120 mg/dl) (1 = True; 0 = False)
 
 rest_ecg : Resultados de electrocardiografía en reposo.
-  0: Normal
-  1: Anomalías de onda ST-T (Inversiones de onda T y/o una elevación de la onda ST > 0.05 mV)
-  2: Muestra una probable hipertrófia del ventrículo izquierdo por el criterio Estes.
+
+  0. Normal
+  1. Anomalías de onda ST-T (Inversiones de onda T y/o una elevación de la onda ST > 0.05 mV)
+  2. Muestra una probable hipertrófia del ventrículo izquierdo por el criterio Estes.
 
 thalach : Ritmo cardiaco máximo.
 
