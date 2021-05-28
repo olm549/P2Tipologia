@@ -2,7 +2,41 @@
 
 Este repositorio es parte de la Práctica 2 de la asignatura Tipología y Ciclo de Vida de los Datos del master de Ciencia de Datos.
 
-En esta práctica, haremos uso del Dataset *Heart Attack Analysis & Prediction Dataset* de Kaggle[Kaggle.com] con el fin de analizar los casos en los que es más probable que una persona sufra un ataque al corazón, así como los factores más influyentes a la hora de que estos casos se den.
+En esta práctica, haremos uso del Dataset *[Heart Attack Analysis & Prediction Dataset](https://www.kaggle.com/rashikrahmanpritom/heart-attack-analysis-prediction-dataset)* de [Kaggle](Kaggle.com) con el fin de analizar los casos en los que es más probable que una persona sufra un ataque al corazón, así como los factores más influyentes a la hora de que estos casos se den.
+
+# Contenido del dataset a analizar
+
+Este dataset, cuenta con 14 variables:
+
+Age : Edad del paciente.
+
+Sex : Sexo del paciente.
+
+exang: Si el paciente ha sufrido una angina provocada por el ejercicio (1 = Si, 0 = No)
+
+ca: Número de vasos principales del corazón (De 0 a 3).
+
+cp : Tipo de dolor en el pecho 
+
+ 1: Angina típica.
+ 2: Angina atípica.
+ 3: Dolor no-anginal.
+ 4: Asintomático.
+ 
+trtbps : Presión arterial en reposo (en mm Hg)
+
+chol : Colesterol (en mg/dl) 
+
+fbs : (Glucemia > 120 mg/dl) (1 = True; 0 = False)
+
+rest_ecg : Resultados de electrocardiografía en reposo.
+  0: Normal
+  1: Anomalías de onda ST-T (Inversiones de onda T y/o una elevación de la onda ST > 0.05 mV)
+  2: Muestra una probable hipertrófia del ventrículo izquierdo por el criterio Estes.
+
+thalach : Ritmo cardiaco máximo.
+
+target : Variable de clase. 0 equivale a un menor riesgo de ataque cardiaco mientras que 1 equivale un mayor riesgo.
 
 # Miembros del grupo
 
@@ -19,3 +53,4 @@ Dentro de la carpeta Code, tenemos los ficheros referentes al código, en R. El 
 
 Dentro la carpeta Data, tenemos los ficheros .csv que han sido utilizados para la realización de la práctica.
 
+Para finalizar, se tendrá un fichero .pdf en el que se dará respuesta a las preguntas planteadas y con una tabla de contribuciones de los diferentes miembros del grupo.
