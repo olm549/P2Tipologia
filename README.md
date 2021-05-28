@@ -7,7 +7,7 @@ Los miembros del grupo son:
  1. Óscar López Montero
  2. José Manuel Jara
 
-#Ficheros
+# Ficheros
 
 En este repositorio, tenemos los siguientes ficheros:
 
