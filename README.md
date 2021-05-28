@@ -28,14 +28,14 @@ fbs : (Glucemia > 120 mg/dl) (1 = True; 0 = False)
 restecg : Resultados de electrocardiografía en reposo.
 
   0. Normal
-  1. Anomalías de onda ST-T (Inversiones de onda T y/o una elevación de la onda ST > 0.05 mV)
+  1. Anomalías de onda ST-T (Inversiones de onda T y/o una elevación de la onda en el segmento ST > 0.05 mV)
   2. Muestra una probable hipertrófia del ventrículo izquierdo por el criterio Estes.
 
 thalach : Ritmo cardiaco máximo.
 
 exang: Si el paciente ha sufrido una angina provocada por el ejercicio (1 = Si, 0 = No)
 
-oldpeak: Depresión del segmento ST provocada por el ejercicio en relación con el reposo.
+oldpeak: Depresión en el segmento ST al hacer ejercicio en relación con el reposo.
 
 slp: Pendiente del segmento ST en la electrocardiografía.
 
@@ -51,9 +51,6 @@ thal: Prueba de esfuerzo cardiaco (Thalium stress test).
 1. El test muestra un defecto irreversible.
 2. El flujo sanguineo se encuentra dentro de los valores normales.
 3. El test muestra un defecto reversible.
-
-
-
 
 target : Variable de clase. 0 equivale a un menor riesgo de ataque cardiaco mientras que 1 equivale un mayor riesgo.
 
