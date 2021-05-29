@@ -10,7 +10,7 @@ Este dataset, cuenta con 14 variables:
 
 age : Edad del paciente.
 
-sex : Sexo del paciente.
+sex : Género del paciente.
 
 cp : Tipo de dolor en el pecho 
 
