@@ -321,6 +321,11 @@ colSums(is.na(heartdata))
 
 Vemos como no tenemos ningún valor vacío en nuestro conjunto de datos. En el caso de encontrarnos un valor vacío en una variable categórica, y que esta sea importante para el análisis se eliminaría. Por otro lado, si tenemos un valor vacío en una variable cuantitativa, podriamos estimarlo a traves de un modelo de regresión junto a otra variable cuantitativa con la que mantenga buena correlación.
 
+Tras comprobarlo, guardamos los datos tras ser tratados en un nuevo fichero.
+
+```{r}
+write.csv(heartdata, "../data/heart_clean.csv")
+```
 
 ### Identificación y tratamiento de valores extremos
 
@@ -332,6 +337,7 @@ Y mostramos los diagramas usando ggplot.
 
 ```{r}
 library(reshape2)
+library(ggplot2)
 hd.m <- melt(heartdata[c(1,4,5,8,10)], id.var = NULL)
 gbp <-ggplot(hd.m,aes(x=variable,y=value, fill=variable)) + geom_boxplot()
 gbp + facet_wrap( ~ variable, scales="free")
