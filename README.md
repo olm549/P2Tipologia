@@ -45,7 +45,7 @@ slp: Pendiente del segmento ST en la electrocardiograma.
 
 caa: Número de vasos principales del corazón (De 0 a 3).
 
-thall: Prueba de esfuerzo cardiaco (Thalium stress test).
+thall: Prueba de esfuerzo cardiaco (Thallium stress test).
 
 1. El test muestra un defecto irreversible.
 2. El flujo sanguineo se encuentra dentro de los valores normales.
