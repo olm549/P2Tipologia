@@ -1,0 +1,365 @@
+---
+title: 'Tipología y ciclo de vida : PRA2 - Selección y preparación de un juego de datos'
+author: "Autores: Óscar López Montero y Jose Antonio Jara"
+date: "Abril 2021"
+output:
+  html_document:
+    highlight: default
+    number_sections: yes
+    theme: cosmo
+    toc: yes
+    toc_depth: 2
+    includes:
+      in_header: PEC-header.html
+  word_document: default
+  pdf_document:
+    highlight: zenburn
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+******
+# Introducción
+******
+## Presentación
+
+En esta práctica se elabora un caso práctico orientado a aprender a identificar los datos
+relevantes para un proyecto analítico y usar las herramientas de integración, limpieza, validación
+y análisis de las mismas.
+
+Para hacer esta práctica tendréis que trabajar en grupos de 2 personas.
+Tendréis que entregar un solo archivo con el enlace Github (https://github.com) donde se
+encuentren las soluciones incluyendo los nombres de los componentes del equipo. 
+
+Podéis utilizar la Wiki de Github para describir vuestro equipo y los diferentes archivos que corresponden a
+vuestra entrega. Cada miembro del equipo tendrá que contribuir con su usuario Github.Aunque no se trata del mismo enunciado, los siguientes ejemplos de ediciones anteriores os pueden servir como guía:
+
+## Competencias
+
+En esta práctica se desarrollan las siguientes competencias del Máster de Data Science:
+
+● Capacidad de analizar un problema en el nivel de abstracción adecuado a cada situación y aplicar las habilidades y conocimientos adquiridos para abordarlo y resolverlo.
+
+● Capacidad para aplicar las técnicas específicas de tratamiento de datos (integración, transformación, limpieza y validación) para su posterior análisis.
+
+## Objetivos
+
+Los objetivos concretos de esta práctica son:
+
+● Aprender a aplicar los conocimientos adquiridos y su capacidad de resolución de problemas en entornos nuevos o poco conocidos dentro de contextos más amplios o multidisciplinares.
+
+● Saber identificar los datos relevantes y los tratamientos necesarios (integración, limpieza y validación) para llevar a cabo un proyecto analítico.
+
+● Aprender a analizar los datos adecuadamente para abordar la información contenida en los datos.
+
+● Identificar la mejor representación de los resultados para aportar conclusiones sobre el problema planteado en el proceso analítico.
+
+● Actuar con los principios éticos y legales relacionados con la manipulación de datos en función del ámbito de aplicación.
+
+● Desarrollar las habilidades de aprendizaje que les permitan continuar estudiando de un modo que tendrá que ser en gran medida autodirigido o autónomo.
+
+● Desarrollar la capacidad de búsqueda, gestión y uso de información y recursos en el ámbito de la ciencia de datos. 
+
+
+## Descripción de la Práctica a realizar
+
+
+El objetivo de esta actividad será el tratamiento de un dataset, que puede ser el creado en la
+práctica 1 o bien cualquier dataset libre disponible en Kaggle (https://www.kaggle.com).
+
+Algunos ejemplos de dataset con los que podéis trabajar son:
+
+● Red Wine Quality (https://www.kaggle.com/uciml/red-wine-quality-cortez-et-al-2009)
+
+● Titanic: Machine Learning from Disaster (https://www.kaggle.com/c/titanic)
+
+El último ejemplo corresponde a una competición activa de Kaggle de manera que, opcionalmente, podéis aprovechar el trabajo realizado durante la práctica para entrar en esta competición.
+
+Siguiendo las principales etapas de un proyecto analítico, las diferentes tareas a realizar (y justificar) son las siguientes:
+
+1. Descripción del dataset. ¿Por qué es importante y qué pregunta/problema pretende responder?
+
+2. Integración y selección de los datos de interés a analizar.
+
+3. Limpieza de los datos.
+
+      3.1. ¿Los datos contienen ceros o elementos vacíos? ¿Cómo gestionarías cada uno de estos casos?
+  
+      3.2. Identificación y tratamiento de valores extremos.
+  
+4. Análisis de los datos.
+
+     4.1. Selección de los grupos de datos que se quieren analizar/comparar (planificación de los análisis a aplicar).
+  
+     4.2. Comprobación de la normalidad y homogeneidad de la varianza.
+  
+     4.3. Aplicación de pruebas estadísticas para comparar los grupos de datos. En función de los datos y el objetivo        del estudio, aplicar pruebas de contraste de hipótesis, correlaciones, regresiones, etc. Aplicar al menos tres       métodos de análisis diferentes.
+  
+5. Representación de los resultados a partir de tablas y gráficas.
+
+6. Resolución del problema. A partir de los resultados obtenidos, ¿cuáles son las conclusiones? ¿Los resultados permiten responder al problema?
+
+7. Código: Hay que adjuntar el código, preferiblemente en R, con el que se ha realizado la limpieza, análisis y representación de los datos. Si lo preferís, también podéis trabajar en Python.
+
+## Recursos Básicos
+
+Los siguientes recursos son de utilidad para la realización de la práctica:
+
+● Calvo M., Subirats L., Pérez D. (2019). Introducción a la limpieza y análisis de los datos. Editorial UOC.
+
+● Megan Squire (2015). Clean Data. Packt Publishing Ltd.
+
+● Jiawei Han, Micheine Kamber, Jian Pei (2012). Data mining: concepts and techniques. Morgan Kaufmann.
+
+● Jason W. Osborne (2010). Data Cleaning Basics: Best Practices in Dealing with Extreme Scores. Newborn and Infant Nursing Reviews; 10 (1): pp. 1527-3369.
+
+● Peter Dalgaard (2008). Introductory statistics with R. Springer Science & Business Media.
+
+● Wes McKinney (2012). Python for Data Analysis. O’Reilley Media, Inc.
+
+● Tutorial de Github https://guides.github.com/activities/hello-world
+
+
+
+## Criterios de valoración
+
+Todos los apartados son obligatorios. La ponderación de los ejercicios es la siguiente:
+
+● Los apartados 1, 2 y 6 valen 0,5 puntos.
+
+● Los apartados 3, 5 y 7 valen 2 puntos.
+
+● El apartado 4 vale 2,5 puntos.
+
+Se valorará la idoneidad de las respuestas, que deberán ser claras y completas. Las diferentes etapas deberán justificarse y acompañarse del código correspondiente. También se valorará la síntesis y claridad, a través del uso de comentarios, del código resultante, así como la calidad de los datos finales analizados.
+
+**Ejercicios prácticos** 
+
+Para todas las PRA es **necesario documentar** en cada apartado del ejercicio práctico que se ha hecho y como se ha hecho.
+
+## Formato y fecha de entrega PRA_1
+
+Durante la semana del 24 al 28 de mayo el grupo podrá entregar al profesor una entrega parcial opcional. Esta entrega parcial es muy recomendable para recibir asesoramiento sobre la práctica y verificar que la dirección tomada es la correcta. Se entregarán comentarios a los estudiantes que hayan efectuado la entrega parcial pero no contará para la nota de la práctica. En la entrega parcial los estudiantes deberán entregar por correo electrónico, al profesor encargado del aula, el enlace al repositorio Github con el que hayan avanzado.
+
+En referente a la entrega final, hay que entregar un único fichero que contenga el enlace Github, el cual no se podrá modificar posteriormente a la fecha de entrega, donde haya:
+
+1. Una Wiki con los nombres de los componentes del grupo y una descripción de los
+ficheros.
+2. Un documento PDF con las respuestas a las preguntas y los nombres de los componentes del grupo. Además, al final del documento, deberá aparecer la siguiente tabla de contribuciones al trabajo, la cual debe firmar cada integrante del grupo con sus iniciales.
+Las iniciales representan la confirmación de que el integrante ha participado en dicho apartado. Todos los integrantes deben participar en cada apartado, por lo que, idealmente, los apartados deberían estar firmados por todos los integrantes..
+3. Una carpeta con el código generado para analizar los datos.
+4. El fichero CSV con los datos originales.
+5. El fichero CSV con los datos finales analizados.
+Este documento de entrega final de la Práctica 2 se debe entregar en el espacio de Entrega y Registro de AC del aula antes de las 23:59 del día 8 de junio. No se aceptarán entregas fuera de plazo.
+
+## Nota: Propiedad intelectual 
+
+> A menudo es inevitable, al producir una obra multimedia, hacer uso de recursos creados por terceras personas. Es por lo tanto comprensible hacerlo en el marco de una práctica de los estudios de Informática, Multimedia y Telecomunicación de la UOC, siempre y cuando esto se documente claramente y no suponga plagio en la práctica. 
+
+> Por lo tanto, al presentar una práctica que haga uso de recursos ajenos, se debe presentar junto con ella un documento en que se detallen todos ellos, especificando el nombre de cada recurso, su autor, el lugar donde se obtuvo y su estatus legal: si la obra esta protegida por el copyright o se acoge a alguna otra licencia de uso (Creative Commons, licencia GNU, GPL ...). 
+El estudiante deberá asegurarse de que la licencia no impide específicamente su uso en el marco de la práctica. En caso de no encontrar la información correspondiente tendrá que asumir que la obra esta protegida por copyright. 
+
+> Deberéis, además, adjuntar los ficheros originales cuando las obras utilizadas sean digitales, y su código fuente si corresponde.  
+
+******
+# Resolución de la práctica
+******
+
+En esta práctica, hemos decidido trabajar sobre el dataset Heart Attack Analysis & Prediction Dataset situado en el repositorio de Kaggle.com. El dataset contiene diferentes muestras sobre pacientes susceptibles a recibir ataques al corazón.
+
+******
+## Descripción del Dataset
+******
+
+El dataset sobre el que vamos a realizar el análisis y predicción trata sobre enfermedades cardiovasculares, en concreto, de la susceptibilidad de algunas personas a recibir ataques al corazón.
+
+El objetivo de la práctica es analizar un conjunto de datos con el fin de identificar que tipo de factores son los más influyentes sobre los pacientes que han recibido ataques al corazón, y con ello, poder predecir con mayor facilidad cuando es más probable que ocurra y qué tipo de personas sufren de un mayor riesgo.
+
+Actualmente en España existen más de 10 millones de personas con enfermedades y/o patologías relacionadas con el corazón, y más de 120.000 fallecen como consecuencia de estas. Entre todas estás personas, sólo en España, más de 14.000 personas fallecieron anualmente a causa de un infarto agudo de miocardio.
+
+La predicción en temas de salud es de gran ayuda a la hora de tratar a algunos pacientes con el fin de que el diagnóstico de su médico sea lo más preciso posible, poder predecir qué personas están más expuestas a este tipo de problemas cardiovasculares, así como los principales causantes puede ayudar a más de un médico a la hora de recomendar un tratamiento a su cliente, llegando a salvar más de una vida.
+
+Antes de explicar las variables que vamos a utilizar en nuestro dataset, y que vamos a analizar con el fin de determinar su incidencia en los infartos agudos de miocardio, vamos a explicar de qué tratan, así como algunas de las pruebas que los médicos realizan a sus pacientes, con el fin de entender los procedimientos y estudios que son realizados hoy en día.
+
+Un infarto agudo de miocardio o ataque al corazón es provocado por la muerte de células cardiacas debido al desequilibrio entre el aporte de riego sanguineo por la circulación coronaria y la demanda del mismo. Este suministro deficiente de oxígeno al corazón es el resultante de anginas de pecho, las cuales, suelen preceder a los infartos si no es tratada, ya que acaban produciendo la muerte celular explicada anteriormente.
+
+Las variables que componen nuestro dataset y que vamos a utilizar para estudiar estos casos son: 
+
+* age : Edad del paciente.
+
+* sex : Género del paciente.
+
+* cp : Tipo de dolor en el pecho
+
+  0. Asintomático.
+  1. Angina típica.
+  2. Angina atípica.
+  2. Dolor no-anginal.
+  
+* trtbps : Presión arterial en reposo (en mm Hg)
+
+* chol : Colesterol (en mg/dl)
+
+* fbs : (Glucemia > 120 mg/dl) (1 = True; 0 = False)
+
+* restecg : Resultados de electrocardiograma en reposo.
+
+  0. Muestra una probable hipertrófia del ventrículo izquierdo.
+  1. Anomalías de onda ST-T (Inversiones de onda T y/o una elevación de la onda en el segmento ST > 0.05 mV)
+  2. Normal
+
+* thalachh : Ritmo cardiaco máximo.
+
+* exng: Si el paciente ha sufrido una angina provocada por el ejercicio (1 = Si, 0 = No)
+
+* oldpeak: Depresión en el segmento ST al hacer ejercicio en relación con el reposo.
+
+* slp: Pendiente del segmento ST en la electrocardiograma.
+
+  0. Pendiente descendente.
+  1. Plano.
+  2. Pendiente ascendente.
+  
+  
+* caa: Número de vasos principales del corazón (De 0 a 3).
+
+* thall: Prueba de esfuerzo cardiaco (Thallium stress test).
+
+  1. El test muestra un defecto irreversible.
+  2. El flujo sanguineo se encuentra dentro de los valores normales.
+  3. El test muestra un defecto reversible.
+
+
+* target : Variable de clase. 0 equivale a un menor riesgo de ataque cardiaco mientras que 1 equivale un mayor riesgo.
+
+Tras las variables, vamos a explicar de una manera más informada el significado de las mismas.
+
+En cada latido del corazón, el impulso cardiaco sucede en la nódulo sinusal (Situado en la aurícula derecha), para después diseminarse por las aurículas, produciendo la despolarización y por consiguiente, la contracción de las mismas. Tras esto, llega al nódulo aurioventricular, situada en la parte izquierda de la aurícula derecha, donde la onda eléctrica sufre una breve pausa de 100ms. Tras esta pausa, la onda eléctrica se disemina a través del *haz de His* (Un fino cordón muscular) llegando a los ventrículos y despolarizándolos y ocasionando la contracción ventricular.
+
+Un electrocardiograma es una representación visual de la actividad eléctrica del corazón en función del tiempo.
+Este, consta principalmente de 5 fases:
+
+1. Onda P: La primera ligera curva hacia arriba que aparece en el electrocardiograma (ECG). Es el momento en el que las aurículas se contraen y envian sangre hacia los ventrículos.
+
+2. Segmento P-R: Periodo entre la Onda P y la siguiente deflexión o curva, en este las aurículas están terminando de vaciarse.
+
+3. Complejo QRS: Periodo en el que los ventrículos se cotraen, expulsando su contenido. Este complejo está compuesto por las ondas Q,R y S. La onda Q no siempre aparece en el ECG, pero se caracteriza por ser la primera pequeña deflexión negativa de este complejo. Esta es seguida por la onda R, que varia en altura dependiendo de las condiciones físicas del paciente (A mayores capacidades físicas, mayor altura). La onda S es la continuación de la onda R, y se caracteriza por ser la fase decreciente del complejo.
+
+4. Segmento ST: Es la fase que más vamos a estudiar en este caso. Se trata del trazado lineal entre la onda S y la onda T. Su pendiente en relación con la linea basal puede llegar a significar insuficiencia de riego cardiaco. Elevaciones y depresiones en este segmento superiores a 1 mm pueden llegar a significar la oclusión de una arteria coronaria.
+
+5. Onda T: También utilizada en nuestras variables. La onda T consiste en una pequeña deflexión positiva que refleja la repolarización ventricular o el momento en el que el corazón se encuentra en estado de relajación tras expulsar la sangre que se hallaba en los ventrículos. En los casos en los que esta onda está invertida, si la inversión es superior a 1mm suele asociarse a casos de isquemia miocárdica.
+
+
+Por otro lado, vamos a explicar también de qué trata el Thallium stress test o prueba de esfuerzo cardiaco.
+
+Esta prueba es realizada con el fin de mostrar cómo fluye la sangre en el corazón mientras se hace ejercicio o se está en reposo, para ver la capacidad del corazón para responder al estrés físico en un entorno clínico controlado comparando la circulación coronaria en reposo con la obtenida mientras se está en el momento de esfuerzo cardiaco cumbre.
+
+Para realizar el test, se introduce un líquido con una pequeña cantidad de radioactividad llamado radioisótopo en el flujo sanguineo, este fluirá por tu sangre hasta llegar al corazón para más tarde poder ser inspeccionado por una cámara gamma con el fin de detectar discrepancias en el funcionamiento del músculo.
+
+
+******
+## Integración y selección de los datos de interés
+******
+
+Para esta práctica vamos a utilizar todos los datos que nos otorga el dataset, pese a tener distinta influencia a la hora de que un paciente sea considerado de riesgo.
+
+Leemos y revisamos los datos:
+
+```{r}
+heartdata<-read.csv('../data/heart.csv')
+summary(heartdata)
+str(heartdata)
+```
+
+Podemos ver como las variables categóricas aún están representadas por valores numéricos, vamos a transformarlas con el fin de hacer el análisis más visual y entendible.
+
+```{r}
+
+heartdata$output <- as.factor(heartdata$output)
+levels(heartdata$output) <- c("Bajo riesgo", "Alto riesgo")
+summary(heartdata$output)
+heartdata$sex <- as.factor(heartdata$sex)
+levels(heartdata$sex) <- c("Mujer", "Hombre")
+summary(heartdata$cp)
+heartdata$cp <- as.factor(heartdata$cp)
+levels(heartdata$cp) <- c("Asintomático","Angina típica","Angina atípica", "Dolor no anginal")
+heartdata$fbs <- ifelse(heartdata$fbs ==1, T,F)
+heartdata$fbs <- as.logical(heartdata$fbs)
+summary(heartdata$fbs)
+heartdata$restecg <- as.factor(heartdata$restecg)
+levels(heartdata$restecg) <- c("Normal","Anomalía de onda ST-T","Hipertrofia")
+heartdata$exng <- ifelse(heartdata$exng ==1, T,F)
+heartdata$exng <- as.logical(heartdata$exng)
+heartdata$slp <- as.factor(heartdata$slp)
+levels(heartdata$slp) <- c("Pendiente ascendente","Plano","Pendiente descendente")
+heartdata$thall <- as.factor(heartdata$thall)
+summary(heartdata$thall)
+```
+
+En el caso de la prueba de esfuerzo cardiaco, tenemos variables nulas mapeadas a 0, dado que no tenemos este dato, que son únicamente dos registros y que no podemos estimarlos mediante modelos lineales, vamos a eliminar estos dos casos. 
+
+```{r}
+heartdata <- heartdata[heartdata$thall!=0,]
+heartdata$thall<-droplevels(heartdata$thall)
+levels(heartdata$thall) <- c("Defecto irreversible","Normal","Defecto reversible")
+summary(heartdata$thall)
+```
+
+******
+## Limpieza de los datos
+******
+
+### Tratamiento de elementos vacíos
+
+Procedemos a comprobar y eliminar/reemplazar los valores nulos de nuestro dataset. Aunque no parecen contener campos vacíos tras la primera toma de contacto y haberlos revisado previamente en Kaggle.
+
+```{r}
+colSums(is.na(heartdata))
+```
+
+Vemos como no tenemos ningún valor vacío en nuestro conjunto de datos. En el caso de encontrarnos un valor vacío en una variable categórica, y que esta sea importante para el análisis se eliminaría. Por otro lado, si tenemos un valor vacío en una variable cuantitativa, podriamos estimarlo a traves de un modelo de regresión junto a otra variable cuantitativa con la que mantenga buena correlación.
+
+
+### Identificación y tratamiento de valores extremos
+
+Vamos a realizar diagramas de caja y bigotes sobre las variables cuantitativas con el fin de encontrar outliers o valores atípicos.
+
+Unimos los datos cuantitativos usando la función melt de la librería reshape.
+
+Y mostramos los diagramas usando ggplot.
+
+```{r}
+library(reshape2)
+hd.m <- melt(heartdata[c(1,4,5,8,10)], id.var = NULL)
+gbp <-ggplot(hd.m,aes(x=variable,y=value, fill=variable)) + geom_boxplot()
+gbp + facet_wrap( ~ variable, scales="free")
+```
+
+Podemos observar tal vez un outlier que destaca en la variable que mide la cantidad del colesterol en sangre. Investigamos su valor, así como si se puede tratar de un caso real.
+
+
+```{r}
+summary(heartdata$chol)
+```
+El nivel saludable de colesterol se encuentra entre 125 y 200 mg/dL. Existen casos en los que se dan niveles elevados de colesterol debidos a trastornos genéticos de origen familiar, ergo no vamos a eliminar el registro.
+
+Por otro lado, también existen algunos outliers que nos llaman la atención respecto a la presión arterial en reposo de los pacientes, comprobamos el valor máximo de la variable.
+
+```{r}
+summary(heartdata$trtbps)
+```
+
+Vemos que llega hasta 200. Se pueden dar casos de personas que tienen esta presión arterial en reposo cuando están sufriendo una crisis hipertensiva, usualmente acompañada de un dolor agudo en el pecho.
+
+Una vez analizados los datos, no vemos coherente modificar o eliminar ninguno de estos valores, por tanto, procedemos a analizarlos junto al resto de registros del dataset.
+
+
+
+******
+## Recursos
+******
+● Dr.Luis Azcona - El electrocardiograma.  https://www.fbbva.es/microsites/salud_cardio/mult/fbbva_libroCorazon_cap4.pdf
+
+● Healthline.com - Thallium Stress Test. https://www.healthline.com/health/thallium-stress-test
