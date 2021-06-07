@@ -4,8 +4,11 @@ author: "Autores: Óscar López Montero y Jose Antonio Jara"
 date: "Abril 2021"
 output:
   pdf_document:
-    highlight: zenburn
+    latex_engine: xelatex
+    highlight: default
+    number_sections: yes
     toc: yes
+    toc_depth: '4'
   word_document: default
   html_document:
     highlight: default
@@ -284,7 +287,8 @@ heartdata$sex <- as.factor(heartdata$sex)
 levels(heartdata$sex) <- c("Mujer", "Hombre")
 summary(heartdata$cp)
 heartdata$cp <- as.factor(heartdata$cp)
-levels(heartdata$cp) <- c("Asintomático","Angina típica","Angina atípica", "Dolor no anginal")
+levels(heartdata$cp) <- c("Asintomático","Angina típica","Angina atípica", 
+                          "Dolor no anginal")
 heartdata$fbs <- ifelse(heartdata$fbs ==1, T,F)
 #heartdata$fbs <- as.logical(heartdata$fbs)
 heartdata$fbs <- as.factor(heartdata$fbs)
@@ -295,7 +299,8 @@ heartdata$exng <- ifelse(heartdata$exng ==1, T,F)
 #heartdata$exng <- as.logical(heartdata$exng)
 heartdata$exng <- as.factor(heartdata$exng)
 heartdata$slp <- as.factor(heartdata$slp)
-levels(heartdata$slp) <- c("Pendiente ascendente","Plano","Pendiente descendente")
+levels(heartdata$slp) <- c("Pendiente ascendente","Plano",
+                           "Pendiente descendente")
 heartdata$thall <- as.factor(heartdata$thall)
 summary(heartdata$thall)
 ```
@@ -305,7 +310,8 @@ En el caso de la prueba de esfuerzo cardiaco, tenemos variables nulas mapeadas a
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 heartdata <- heartdata[heartdata$thall!=0,]
 heartdata$thall<-droplevels(heartdata$thall)
-levels(heartdata$thall) <- c("Defecto irreversible","Normal","Defecto reversible")
+levels(heartdata$thall) <- c("Defecto irreversible","Normal",
+                             "Defecto reversible")
 summary(heartdata$thall)
 ```
 
@@ -347,10 +353,10 @@ gbp + facet_wrap( ~ variable, scales="free")
 
 Podemos observar tal vez un outlier que destaca en la variable que mide la cantidad del colesterol en sangre. Investigamos su valor, así como si se puede tratar de un caso real.
 
-
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 summary(heartdata$chol)
 ```
+
 El nivel saludable de colesterol se encuentra entre 125 y 200 mg/dL. Existen casos en los que se dan niveles elevados de colesterol debidos a trastornos genéticos de origen familiar, ergo no vamos a eliminar el registro.
 
 Por otro lado, también existen algunos outliers que nos llaman la atención respecto a la presión arterial en reposo de los pacientes, comprobamos el valor máximo de la variable.
@@ -450,7 +456,8 @@ Vamos a utilizar las variables de mayor correlación obtenidas en el apartado an
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
 # Aplicamos el algoritmo de regresión lineal
-ml.heart <- lm(output~age+sex+slp+thalachh+restecg+cp, data = heart_ori,family = binomial)
+ml.heart <- lm(output~age+sex+slp+thalachh+restecg+cp, data = heart_ori,
+               family = binomial)
 
 # Resultados
 summary(ml.heart)
@@ -468,7 +475,7 @@ r = roc(heart_ori$output , prob, data=heart_ori)
 plot(r)
 r
 ```
-El resultado del modelo es de 0.8326, por lo que la habilidad del modelo para predecir
+El resultado del modelo es de 0.8697, por lo que la habilidad del modelo para predecir
 enfermedades cardíacas es muy bueno. 
 
 AURO > 0.8, el modelo discrimina de modo muy bueno. 
@@ -503,19 +510,10 @@ Tiene una probabilidad de un 85% de padecer una enfermedad cardíaca según nues
 
 #### Árbol de decisión con algoritmo C50
 
-Procedemos a instalar los packages necesarios:
-
-```{r echo=TRUE, message=FALSE, warning=FALSE}
-# Instalación del paquete C50
-if (!require(C50)) {
-    install.packages("C50", repos = "http://cran.es.r-project.org")
-    library(C50)
-}
-```
-
 Desordenamos la muestra mediante un algoritmo de desordenación. 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(C50)
 set.seed(10)
 heart_r <- heartdata[sample(nrow(heartdata)),]
 
@@ -546,17 +544,17 @@ trainy = as.factor(trainy)
 mo <- C50::C5.0(trainX, trainy,rules=TRUE )
 summary(mo)
 ```
-Obtenemos la siguiente información del arbol de decisión:
+Obtenemos la siguiente información del árbol de decisión:
 
-El algoritmo ha obtenido 8 reglas de clasificación con un error del 8.4% y un acierto del 92%.
+El algoritmo ha obtenido 8 reglas de clasificación con un error del 11% y un acierto del 89%.
 
 Analizaremos los mejores resultados:
 
-class Bajo riesgo  [0.953](rule 1): Hombre con tipo de dolor en el pecho asintomático y con número de vasos principales en el corazón superior a cero tiene un 95% de no padecer enfermedad cardíaca. 
+class Bajo riesgo  [0.972](rule 1): Persona con tipo de dolor en el pecho Asintomático o Angina típica, con la presión arterial en resposo > 108, con colesterol en sangre > 242 y con el resultado de la prueba de esfuerzo con Defecto irreversible o  Defecto reversible tiene una probabilidad de no padecer una enfermedad cardíaca del 97%
 
-class Alto riesgo  [0.955](Rule 6): Persona con edad de 59 años, con la presión arterial en resposo <= 155 con número de vasos principales en el corazón <= 0 y con los resultados en la prueba de esfuerzo cardíaco 0 o 2 tiene un 95% de probabilidad de padecer enfermedad cardíaca. 
+class Alto riesgo  [0.929](Rule 5): Persona con colesterol <= 242, con depresión en el segmento ST al hacer ejercicio en relación con el reposo <= 0.4 y con el número de vasos principales del corazón  <= 0 tiene una probabilidad de padecer una enfermedad cardiaca del 93%.
 
-Las variables más influyentes en la clasificación son: 87.13%	cp, 81.19%	thall, 53.47%	caa, 51.49%	sex, 48.51%	age, 31.68%	trtbps, 19.80%	chol, 19.80%	slp, 8.42%	exng
+Las variables más influyentes en la clasificación son: 89.00%	thall, 65.00%	caa, 61.50%	cp, 44.50%	trtbps, 38.00%	oldpeak y 30.00%	chol
 
 Mostramos el árbol de manera gráfica. 
 
@@ -577,12 +575,13 @@ matriz_conf<-table(testy,Predicted=predicted_mo)
 matriz_conf
 ```
 
-El estudio de los datos nos muestra que 38 + 38 = 76 has sido clasificados correctamente y 11 + 14 = 25 no. Tenemos un 76% de aciertos, un porcentaje de acierto inferior al conjunto de entrenamiento.
+El estudio de los datos nos muestra que 32 + 49 = 81 has sido clasificados correctamente y 7 + 13 = 20 no. Tenemos un 81% de aciertos, un porcentaje de acierto ligeramente superior al conjunto de entrenamiento.
 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 porcentaje_correct<-100 * sum(diag(matriz_conf)) / sum(matriz_conf)
-print(sprintf("El %% de registros correctamente clasificados es: %.4f %%",porcentaje_correct))
+print(sprintf("El %% de registros correctamente clasificados es: %.4f %%",
+              porcentaje_correct))
 ```
 
 El porcentaje de la matriz de confusión es igual al que hemos obtenido de las reglas de decisión. 
@@ -627,7 +626,8 @@ for (i in c(2,3,4,5,6,7,8,9,10))
   sk            <- silhouette(y_cluster, d)
   resultados[i] <- mean(sk[,3])
 }
-plot(2:10,resultados[2:10],type="o",col="blue",pch=0,xlab="Numbero de clusters",ylab="Silueta")
+plot(2:10,resultados[2:10],type="o",col="blue",pch=0,xlab="Numbero de clusters",
+     ylab="Silueta")
 
 ```
 La gráfica nos muestra que el número de cluster optimo es 2, vamos a seguir probando otros algoritmos para comprobar si realmente k=2.
@@ -641,7 +641,8 @@ for (i in c(2,3,4,5,6,7,8,9,10))
   fit           <- kmeans(heart_km, i)
   resultados[i] <- fit$tot.withinss 
 }
-plot(2:10,resultados[2:10],type="o",col="blue",pch=0,xlab="Numbero de clusters",ylab="tot.withinss")
+plot(2:10,resultados[2:10],type="o",col="blue",pch=0,xlab="Numbero de clusters",
+     ylab="tot.withinss")
 ```
 
 La gráfica nos muestra una estabilización de la curva en k= 4.
@@ -656,8 +657,10 @@ fit_ch <- kmeansruns(heart_km, krange = 1:10, criterion = "ch")
 fit_asw <- kmeansruns(heart_km, krange = 1:10, criterion = "asw")
 fit_ch$bestk
 fit_asw$bestk
-plot(1:10,fit_ch$crit, type = "o", col="blue", pch=0, xlab="Número de clústers", ylab="Criterio Silueta Media")
-plot(1:10,fit_asw$crit, type = "o", col="blue", pch=0, xlab="Número de clústers", ylab="Criterio Silueta Media")
+plot(1:10,fit_ch$crit, type = "o", col="blue", pch=0, xlab="Número de clústers", 
+     ylab="Criterio Silueta Media")
+plot(1:10,fit_asw$crit, type = "o", col="blue", pch=0, xlab="Número de clústers"
+     , ylab="Criterio Silueta Media")
 ```
 
 Los dos métodos nos han dado el mismo resultado k=2.
@@ -685,17 +688,17 @@ Vamos a estudiar la precisión del modelo para k =2
 table(km.res2$cluster,heartdata$output)
 ```
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-100*((99+119)/(218+39+46))
+100*((99+119)/(218+38+45))
 ```
 
 Tenemos un total de instancias correctamente clasificadas de 218, el total de casos con error de clasificación son 85, por lo que podemos calcular:
-exactitud = 218/(218+85) = 0,71947, con lo que el modelo para k=2 tienen una exactitud del 72%.
+exactitud = 218/(218+83) = 0,7242, con lo que el modelo para k=2 tienen una exactitud del 72%.
 
 ******
 ## Conclusión
 ******
 
-Inicialmente hemos realizado un proceso de limpieza y preprocesado de los datos del dataset que estamos estudiando, el cual contiene datos reales sobre pruebas médicas para el diagnóstico de enfermedades cardíacas. En este proceso hemos cambiado los nombres a las variables y hemos estudiado los valores extresmos(Outliers).
+Inicialmente hemos realizado un proceso de limpieza y preprocesado de los datos del dataset que estamos estudiando, el cual contiene datos reales sobre pruebas médicas para el diagnóstico de enfermedades cardíacas. En este proceso hemos cambiado los nombres a las variables y hemos estudiado los valores extremos(Outliers).
 
 Seguidamente hicimos un análisis exploratorio del conjunto de variables que componen el dataset para tener una primera aproximación de su comportamiento, y así poder hacernos una idea de como se comportarán al aplicar algoritmos estadísticos. 
 
@@ -703,7 +706,7 @@ Aplicamos un algoritmo de regresión lineal que es una buena manera de conocer l
 
 Para finalizar, aplicamos un algoritmo no supervisado de clasificación (K-means) el cual nos dió como resultado 2 clusters tal y como se agrupa la variable objetivo(output) (Bajo riesgo, Alto riesgo).
 
-Cada uno de los pasos realizados en este estudios nos han ayudado a tener una profunda compresión de los datos que conforman el dataset. Por lo tanto, podemos afirmar, que hemos podido responder el problema de inicio, el cual consistía en poder responder mediante el analisis de datos si se podía diagnosticar una enfermedad cardíaca. 
+Cada uno de los pasos realizados en este estudios nos han ayudado a tener una profunda compresión de los datos que conforman el dataset. Por lo tanto, podemos afirmar, que hemos podido responder el problema de inicio, el cual consistía en poder responder mediante el análisis de datos si se podía diagnosticar una enfermedad cardíaca. 
 
 
 ******
@@ -712,3 +715,18 @@ Cada uno de los pasos realizados en este estudios nos han ayudado a tener una pr
 ● Dr.Luis Azcona - El electrocardiograma.  https://www.fbbva.es/microsites/salud_cardio/mult/fbbva_libroCorazon_cap4.pdf
 
 ● Healthline.com - Thallium Stress Test. https://www.healthline.com/health/thallium-stress-test
+
+******
+## Contribuciones/Firma integrantes
+******
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+integrantes <- data.frame(Contribuciones=
+   c("Investigación previa","Redacción de las respuestas","Desarrollo código"), 
+   Firma=c("Jose Antonio Jara Pérez / Óscar López Montero",
+           "Jose Antonio Jara Pérez / Óscar López Montero",
+           "Jose Antonio Jara Pérez / Óscar López Montero"))
+
+integrantes
+```
+
