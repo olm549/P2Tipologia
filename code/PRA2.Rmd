@@ -3,18 +3,18 @@ title: 'Tipología y ciclo de vida : PRA2 - Selección y preparación de un jueg
 author: "Autores: Óscar López Montero y Jose Antonio Jara"
 date: "Abril 2021"
 output:
+  pdf_document:
+    highlight: zenburn
+    toc: yes
+  word_document: default
   html_document:
     highlight: default
     number_sections: yes
     theme: cosmo
     toc: yes
-    toc_depth: 2
+    toc_depth: 4
     includes:
       in_header: PEC-header.html
-  word_document: default
-  pdf_document:
-    highlight: zenburn
-    toc: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -267,7 +267,7 @@ Para esta práctica vamos a utilizar todos los datos que nos otorga el dataset, 
 
 Leemos y revisamos los datos:
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 heartdata<-read.csv('../data/heart.csv')
 summary(heartdata)
 str(heartdata)
@@ -275,7 +275,7 @@ str(heartdata)
 
 Podemos ver como las variables categóricas aún están representadas por valores numéricos, vamos a transformarlas con el fin de hacer el análisis más visual y entendible.
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 
 heartdata$output <- as.factor(heartdata$output)
 levels(heartdata$output) <- c("Bajo riesgo", "Alto riesgo")
@@ -286,12 +286,14 @@ summary(heartdata$cp)
 heartdata$cp <- as.factor(heartdata$cp)
 levels(heartdata$cp) <- c("Asintomático","Angina típica","Angina atípica", "Dolor no anginal")
 heartdata$fbs <- ifelse(heartdata$fbs ==1, T,F)
-heartdata$fbs <- as.logical(heartdata$fbs)
+#heartdata$fbs <- as.logical(heartdata$fbs)
+heartdata$fbs <- as.factor(heartdata$fbs)
 summary(heartdata$fbs)
 heartdata$restecg <- as.factor(heartdata$restecg)
 levels(heartdata$restecg) <- c("Normal","Anomalía de onda ST-T","Hipertrofia")
 heartdata$exng <- ifelse(heartdata$exng ==1, T,F)
-heartdata$exng <- as.logical(heartdata$exng)
+#heartdata$exng <- as.logical(heartdata$exng)
+heartdata$exng <- as.factor(heartdata$exng)
 heartdata$slp <- as.factor(heartdata$slp)
 levels(heartdata$slp) <- c("Pendiente ascendente","Plano","Pendiente descendente")
 heartdata$thall <- as.factor(heartdata$thall)
@@ -300,7 +302,7 @@ summary(heartdata$thall)
 
 En el caso de la prueba de esfuerzo cardiaco, tenemos variables nulas mapeadas a 0, dado que no tenemos este dato, que son únicamente dos registros y que no podemos estimarlos mediante modelos lineales, vamos a eliminar estos dos casos. 
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 heartdata <- heartdata[heartdata$thall!=0,]
 heartdata$thall<-droplevels(heartdata$thall)
 levels(heartdata$thall) <- c("Defecto irreversible","Normal","Defecto reversible")
@@ -315,7 +317,7 @@ summary(heartdata$thall)
 
 Procedemos a comprobar y eliminar/reemplazar los valores nulos de nuestro dataset. Aunque no parecen contener campos vacíos tras la primera toma de contacto y haberlos revisado previamente en Kaggle.
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 colSums(is.na(heartdata))
 ```
 
@@ -323,7 +325,7 @@ Vemos como no tenemos ningún valor vacío en nuestro conjunto de datos. En el c
 
 Tras comprobarlo, guardamos los datos tras ser tratados en un nuevo fichero.
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 write.csv(heartdata, "../data/heart_clean.csv")
 ```
 
@@ -335,7 +337,7 @@ Unimos los datos cuantitativos usando la función melt de la librería reshape.
 
 Y mostramos los diagramas usando ggplot.
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 library(reshape2)
 library(ggplot2)
 hd.m <- melt(heartdata[c(1,4,5,8,10)], id.var = NULL)
@@ -346,14 +348,14 @@ gbp + facet_wrap( ~ variable, scales="free")
 Podemos observar tal vez un outlier que destaca en la variable que mide la cantidad del colesterol en sangre. Investigamos su valor, así como si se puede tratar de un caso real.
 
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 summary(heartdata$chol)
 ```
 El nivel saludable de colesterol se encuentra entre 125 y 200 mg/dL. Existen casos en los que se dan niveles elevados de colesterol debidos a trastornos genéticos de origen familiar, ergo no vamos a eliminar el registro.
 
 Por otro lado, también existen algunos outliers que nos llaman la atención respecto a la presión arterial en reposo de los pacientes, comprobamos el valor máximo de la variable.
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 summary(heartdata$trtbps)
 ```
 
@@ -361,6 +363,347 @@ Vemos que llega hasta 200. Se pueden dar casos de personas que tienen esta presi
 
 Una vez analizados los datos, no vemos coherente modificar o eliminar ninguno de estos valores, por tanto, procedemos a analizarlos junto al resto de registros del dataset.
 
+******
+## Análisis de los datos
+******
+
+### Comprobación de la normalidad y homogeneidad de la varianza
+
+Estudio de la normalidad en las variables numéricas
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(ggpubr)
+library(ggplot2)
+library(lattice)
+library(grid)
+library(gridExtra)
+
+# Varible Age
+H1 <- histogram(heartdata$age)
+G1 <- ggqqplot(heartdata$age)
+
+# Variable trtbps
+H2 <- histogram(heartdata$trtbps)
+G2 <- ggqqplot(heartdata$trtbps)
+
+# Variable chol
+H3 <- histogram(heartdata$chol)
+G3 <- ggqqplot(heartdata$chol)
+
+# Variable thalach
+H4 <- histogram(heartdata$thalach)
+G4 <- ggqqplot(heartdata$thalach)
+
+# Variable oldpeak
+H5 <- histogram(heartdata$oldpeak)
+G5 <- ggqqplot(heartdata$oldpeak)
+
+# Mostramos las gráficas
+grid.arrange(H1, G1)
+grid.arrange(H2, G2)
+grid.arrange(H3, G3)
+grid.arrange(H4, G4)
+grid.arrange(H5, G5)
+
+```
+
+Los gráficos de densidad y Q-Q nos confirman que todas las variables numéricas siguen una distribución normal. Practicamente todas las gráficas tienen una normalidad en el centro de la muestra y están un poco desviadas en los extremos, pero este dato no es suficiente para descartar la normalidad, además todas las variables tienen n>30 porque podemos asumir que siguen una distribución normal.
+
+Estudio de la homogeneidad de las variables numéricas. 
+
+###  Pruebas estadísticas y métodos de análisis
+
+Para realizar este estudio aplicaremos 4 modelos: Matriz de correlación, regresión lineal, árbol de decisión y agrupación(clustering).
+
+#### Matriz correlación
+
+Mediante la matriz de correlación podremos observar que nivel de correlación guardan la variables entre ellas y de esta manera saber cuales son la más significativas. 
+
+Utilizaremos el coeficiente de correlación de Pearson para ver cuán asociadas se encuentra la variables. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(GGally)
+#Utilizaremos el data set original ya que todos los campos son numéricos.
+heart_ori <- read.csv('../data/heart.csv')
+
+ggcorr(heart_ori, method = c("everything", "pearson")) 
+
+cor(heart_ori)
+
+```
+
+En general podemos decir que no existe muchas relación entre las variables del dataset. 
+
+Nos centraremos en la relación entre la variable 'tarjet' (output) y el resto:
+
+- Encontramos que slp, thalachh, restecg y cp son la que más peso tienen respecto a 'tarjet'(output) es decir, la pendiente del segmento ST en la electrocardiograma, ritmo cardíaco máximo, resultados de electrocardiograma en reposo y el tipo de dolor en el pecho. 
+
+Todas son pruebas médicas para evaluar el estado del corazón, por lo que es lógico que tengan un peso importante, porque a través de los resultados los médicos tienen datos fiables para el diagnóstico.
+
+
+#### Regresión lineal 
+
+Mediante la regresión lineal podremos predecir si un paciente padecerá enfermedad cardíaca. 
+
+Vamos a utilizar las variables de mayor correlación obtenidas en el apartado anterior. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# Aplicamos el algoritmo de regresión lineal
+ml.heart <- lm(output~age+sex+slp+thalachh+restecg+cp, data = heart_ori,family = binomial)
+
+# Resultados
+summary(ml.heart)
+
+```
+Podemos observar que la variables restecg no es significativa para el modelo de regresión ya que p-values > 0.05.
+
+Para evaluar la eficiencia del modelo de regresión lineal vamos a utilizar la curva ROC.
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(pROC)
+prob = predict(ml.heart, heart_ori, type="response")
+r = roc(heart_ori$output , prob, data=heart_ori)
+plot(r)
+r
+```
+El resultado del modelo es de 0.8326, por lo que la habilidad del modelo para predecir
+enfermedades cardíacas es muy bueno. 
+
+AURO > 0.8, el modelo discrimina de modo muy bueno. 
+
+
+Vamos usar el modelo mencionado para realizar una predicción. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# creamos un nuevo dataset con los datos del paciente
+
+paciente <- data.frame(age=57,sex=1,slp=2,thalachh=162,restecg=2, cp=2)
+
+# Algoritmo de predicción
+predict(ml.heart, paciente)
+```
+
+Paciente con las siguientes patologías:
+
+- Edad = 57
+
+- sexo = Hombre
+
+- Pendiente del segmento ST en la electrocardiograma = 2 - Pendiente ascendente
+
+- Ritmo cardíaco máximo = 162 pulsaciones por minuto.
+
+- Resultados de electrocardiograma en reposo = 2 - Normal
+
+- Tipo de dolor en el pecho = 2 - Dolot no-anginal. 
+
+Tiene una probabilidad de un 85% de padecer una enfermedad cardíaca según nuestro modelo de regresión lineal con una efectividad del 83%.
+
+#### Árbol de decisión con algoritmo C50
+
+Procedemos a instalar los packages necesarios:
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# Instalación del paquete C50
+if (!require(C50)) {
+    install.packages("C50", repos = "http://cran.es.r-project.org")
+    library(C50)
+}
+```
+
+Desordenamos la muestra mediante un algoritmo de desordenación. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+set.seed(10)
+heart_r <- heartdata[sample(nrow(heartdata)),]
+
+```
+
+Separaremos los datos en train con una proporción  2/3 y test con una proporción de 1/3, esto es necesario para poder aplicar el algoritmo. 
+
+Clasificaremos los datos por la variable output que se encuentra en la posición 14 del dataset. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+set.seed(666)
+y <- heart_r[,14] 
+X <- heart_r[,1:13] 
+
+# Creamos rangos para los subconjuntos train (2/3) y test(1/3)
+
+indexes = sample(1:nrow(heartdata), size=floor((2/3)*nrow(heartdata)))
+trainX<-X[indexes,]
+trainy<-y[indexes]
+testX<-X[-indexes,]
+testy<-y[-indexes]
+```
+
+Aplicamos el algoritmo C50.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+trainy = as.factor(trainy)
+mo <- C50::C5.0(trainX, trainy,rules=TRUE )
+summary(mo)
+```
+Obtenemos la siguiente información del arbol de decisión:
+
+El algoritmo ha obtenido 8 reglas de clasificación con un error del 8.4% y un acierto del 92%.
+
+Analizaremos los mejores resultados:
+
+class Bajo riesgo  [0.953](rule 1): Hombre con tipo de dolor en el pecho asintomático y con número de vasos principales en el corazón superior a cero tiene un 95% de no padecer enfermedad cardíaca. 
+
+class Alto riesgo  [0.955](Rule 6): Persona con edad de 59 años, con la presión arterial en resposo <= 155 con número de vasos principales en el corazón <= 0 y con los resultados en la prueba de esfuerzo cardíaco 0 o 2 tiene un 95% de probabilidad de padecer enfermedad cardíaca. 
+
+Las variables más influyentes en la clasificación son: 87.13%	cp, 81.19%	thall, 53.47%	caa, 51.49%	sex, 48.51%	age, 31.68%	trtbps, 19.80%	chol, 19.80%	slp, 8.42%	exng
+
+Mostramos el árbol de manera gráfica. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+mo_tree <- C50::C5.0(trainX, trainy)
+plot(mo_tree)
+```
+
+Vamos a obtener la precisión del modelo a través de la matriz de confusión. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+predicted_mo <- predict( mo, testX, type="class" )
+print(sprintf("La precisión del árbol es: %.4f %%",100*sum(predicted_mo == testy) / length(predicted_mo)))
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+matriz_conf<-table(testy,Predicted=predicted_mo)
+matriz_conf
+```
+
+El estudio de los datos nos muestra que 38 + 38 = 76 has sido clasificados correctamente y 11 + 14 = 25 no. Tenemos un 76% de aciertos, un porcentaje de acierto inferior al conjunto de entrenamiento.
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+porcentaje_correct<-100 * sum(diag(matriz_conf)) / sum(matriz_conf)
+print(sprintf("El %% de registros correctamente clasificados es: %.4f %%",porcentaje_correct))
+```
+
+El porcentaje de la matriz de confusión es igual al que hemos obtenido de las reglas de decisión. 
+
+
+#### K-means
+
+K-means es un método de agrupamiento, que tiene como objetivo la partición de un conjunto de n observaciones en k grupos en el que cada observación pertenece al grupo cuyo valor medio es más cercano.
+
+K-means no funciona con datos categóricos así que tendremos que hacer un subconjunto con los datos numéricos del dataset, aplicaremos algoritmos de normalizar ya que este algoritmo es muy sensible a los outliers.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(dplyr)
+# Creamos el dataset con las variables numéricas
+heart_km <- select_if(heartdata, is.numeric)
+
+# Aplicamos algoritmo de normalizar para minimizar el efecto de los outliers.
+normalizar <- function(x){
+ return ((x-min(x))/(max(x)-min(x)))
+}
+
+heart_km$age <- normalizar(heart_km$age)
+heart_km$trtbps   <- normalizar(heart_km$trtbps)
+heart_km$thalachh <- normalizar(heart_km$thalachh)
+heart_km$chol <- normalizar(heart_km$chol)
+heart_km$oldpeak <- normalizar(heart_km$oldpeak)
+
+# Elimimas caa ya que es categórica y no numérica. 
+heart_km$caa <- NULL
+```
+
+Al no conocer el número de clústers optimo, probaremos con diferentes valores y métodos. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(cluster)
+d <- daisy(heart_km)
+resultados <- rep(0, 10)
+for (i in c(2,3,4,5,6,7,8,9,10))
+{
+  fit           <- kmeans(heart_km, i)
+  y_cluster     <- fit$cluster
+  sk            <- silhouette(y_cluster, d)
+  resultados[i] <- mean(sk[,3])
+}
+plot(2:10,resultados[2:10],type="o",col="blue",pch=0,xlab="Numbero de clusters",ylab="Silueta")
+
+```
+La gráfica nos muestra que el número de cluster optimo es 2, vamos a seguir probando otros algoritmos para comprobar si realmente k=2.
+
+
+Vamos aplicar el método elbow(codo). Este método utiliza los valores de la inercia obtenidos tras aplicar el K-means a diferente número de Clusters (desde 1 a N Clusters), siendo la inercia la suma de las distancias al cuadrado de cada objeto del Cluster a su centroide.
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+resultados <- rep(0, 10)
+for (i in c(2,3,4,5,6,7,8,9,10))
+{
+  fit           <- kmeans(heart_km, i)
+  resultados[i] <- fit$tot.withinss 
+}
+plot(2:10,resultados[2:10],type="o",col="blue",pch=0,xlab="Numbero de clusters",ylab="tot.withinss")
+```
+
+La gráfica nos muestra una estabilización de la curva en k= 4.
+
+
+Aplicamos el algoritmo de silueta media y Calinski-Harabasz.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(fpc)
+
+fit_ch <- kmeansruns(heart_km, krange = 1:10, criterion = "ch")
+fit_asw <- kmeansruns(heart_km, krange = 1:10, criterion = "asw")
+fit_ch$bestk
+fit_asw$bestk
+plot(1:10,fit_ch$crit, type = "o", col="blue", pch=0, xlab="Número de clústers", ylab="Criterio Silueta Media")
+plot(1:10,fit_asw$crit, type = "o", col="blue", pch=0, xlab="Número de clústers", ylab="Criterio Silueta Media")
+```
+
+Los dos métodos nos han dado el mismo resultado k=2.
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# visualización de 2 clusters
+km.res2 <- kmeans(heart_km, 2, nstart = 25)
+clusplot(heart_km, km.res2$cluster, color=TRUE, shade=TRUE, labels=2, lines=0)
+
+```
+El algoritmo silhouette es 2
+
+El algoritmo elbow(codo) es 4
+
+El algoritmo silueta media es 2
+
+El algoritmo de Calinski-Harabasz es 2
+
+El resultado optimo es k=2, lo que concuerda con los datos que tenemos en el dataset, ya que puedes o no padecer enfermedad cardíaca. Esto nos confirma que la categoría de la variable target (Bajo riesgo, Alto riesgo) es correcto.  
+
+Vamos a estudiar la precisión del modelo para k =2
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+table(km.res2$cluster,heartdata$output)
+```
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+100*((99+119)/(218+39+46))
+```
+
+Tenemos un total de instancias correctamente clasificadas de 218, el total de casos con error de clasificación son 85, por lo que podemos calcular:
+exactitud = 218/(218+85) = 0,71947, con lo que el modelo para k=2 tienen una exactitud del 72%.
+
+******
+## Conclusión
+******
+
+Inicialmente hemos realizado un proceso de limpieza y preprocesado de los datos del dataset que estamos estudiando, el cual contiene datos reales sobre pruebas médicas para el diagnóstico de enfermedades cardíacas. En este proceso hemos cambiado los nombres a las variables y hemos estudiado los valores extresmos(Outliers).
+
+Seguidamente hicimos un análisis exploratorio del conjunto de variables que componen el dataset para tener una primera aproximación de su comportamiento, y así poder hacernos una idea de como se comportarán al aplicar algoritmos estadísticos. 
+
+Aplicamos un algoritmo de regresión lineal que es una buena manera de conocer la relación que existe entre las variables del modelo, seguidamente aplicamos el algoritmo supervisado de arbole de decisión que nos sirve para sabes los diferentes casos (reglas de comportamiento) de la variable objetivo (Output)
+
+Para finalizar, aplicamos un algoritmo no supervisado de clasificación (K-means) el cual nos dió como resultado 2 clusters tal y como se agrupa la variable objetivo(output) (Bajo riesgo, Alto riesgo).
+
+Cada uno de los pasos realizados en este estudios nos han ayudado a tener una profunda compresión de los datos que conforman el dataset. Por lo tanto, podemos afirmar, que hemos podido responder el problema de inicio, el cual consistía en poder responder mediante el analisis de datos si se podía diagnosticar una enfermedad cardíaca. 
 
 
 ******
