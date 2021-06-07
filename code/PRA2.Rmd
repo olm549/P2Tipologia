@@ -440,9 +440,9 @@ cor(heart_ori)
 
 En general podemos decir que no existe muchas relación entre las variables del dataset. 
 
-Nos centraremos en la relación entre la variable 'tarjet' (output) y el resto:
+Nos centraremos en la relación entre la variable 'target' (output) y el resto:
 
-- Encontramos que slp, thalachh, restecg y cp son la que más peso tienen respecto a 'tarjet'(output) es decir, la pendiente del segmento ST en la electrocardiograma, ritmo cardíaco máximo, resultados de electrocardiograma en reposo y el tipo de dolor en el pecho. 
+- Encontramos que slp, thalachh, restecg y cp son la que más peso tienen respecto a 'target'(output) es decir, la pendiente del segmento ST en la electrocardiograma, ritmo cardíaco máximo, resultados de electrocardiograma en reposo y el tipo de dolor en el pecho. 
 
 Todas son pruebas médicas para evaluar el estado del corazón, por lo que es lógico que tengan un peso importante, porque a través de los resultados los médicos tienen datos fiables para el diagnóstico.
 
@@ -626,7 +626,7 @@ for (i in c(2,3,4,5,6,7,8,9,10))
   sk            <- silhouette(y_cluster, d)
   resultados[i] <- mean(sk[,3])
 }
-plot(2:10,resultados[2:10],type="o",col="blue",pch=0,xlab="Numbero de clusters",
+plot(2:10,resultados[2:10],type="o",col="blue",pch=0,xlab="Número de clusters",
      ylab="Silueta")
 
 ```
@@ -641,7 +641,7 @@ for (i in c(2,3,4,5,6,7,8,9,10))
   fit           <- kmeans(heart_km, i)
   resultados[i] <- fit$tot.withinss 
 }
-plot(2:10,resultados[2:10],type="o",col="blue",pch=0,xlab="Numbero de clusters",
+plot(2:10,resultados[2:10],type="o",col="blue",pch=0,xlab="Número de clusters",
      ylab="tot.withinss")
 ```
 
